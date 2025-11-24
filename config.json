@@ -1,0 +1,81 @@
+{
+  "model": {
+    "name": "Salesforce/codet5-small",
+    "version": "1.0.0",
+    "parameters": 60000000,
+    "architecture": "T5ForConditionalGeneration",
+    "fine_tuned": true,
+    "training_date": "2024-01-15T10:30:00Z"
+  },
+  "training": {
+    "samples": 3000,
+    "validation_samples": 500,
+    "test_samples": 500,
+    "epochs": 3,
+    "batch_size": 8,
+    "learning_rate": 5e-5,
+    "languages": ["javascript", "java", "sql"],
+    "synthetic_data": true
+  },
+  "performance": {
+    "final_train_loss": 0.4523,
+    "final_val_loss": 0.4892,
+    "test_accuracy": 0.89,
+    "average_inference_time": 2.3,
+    "confidence_calibration": 0.92
+  },
+  "features": {
+    "explanation_generation": true,
+    "dependency_detection": true,
+    "issue_detection": true,
+    "confidence_scoring": true,
+    "multi_language": true,
+    "offline_inference": true
+  },
+  "supported_languages": [
+    {
+      "name": "javascript",
+      "extensions": [".js", ".jsx", ".ts", ".tsx"],
+      "patterns": ["function", "async", "await", "fetch", "require", "import"]
+    },
+    {
+      "name": "java",
+      "extensions": [".java"],
+      "patterns": ["@RestController", "@Service", "@Repository", "public class"]
+    },
+    {
+      "name": "sql",
+      "extensions": [".sql"],
+      "patterns": ["CREATE", "SELECT", "INSERT", "UPDATE", "DELETE", "PROCEDURE"]
+    }
+  ],
+  "deployment": {
+    "inference_device": "cpu",
+    "max_input_length": 512,
+    "max_output_length": 256,
+    "batch_processing": true,
+    "cache_enabled": false
+  },
+  "api": {
+    "version": "1.0.0",
+    "base_url": "http://localhost:8000",
+    "endpoints": {
+      "analyze": "/api/analyze",
+      "health": "/health",
+      "metrics": "/api/metrics",
+      "visualization": "/api/visualization"
+    }
+  },
+  "visualization": {
+    "charts": ["training_loss", "language_distribution", "performance_metrics"],
+    "update_interval": 1000,
+    "theme": "modern"
+  },
+  "metadata": {
+    "author": "Ahana Bandyopadhyay",
+    "organization": "TU Eindhoven",
+    "license": "MIT",
+    "repository": "https://github.com/ahana/codebridge",
+    "documentation": "https://codebridge-docs.readthedocs.io"
+  }
+}
