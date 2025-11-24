@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 [![Model Performance](https://img.shields.io/badge/Val%20Loss-0.1451-brightgreen)](https://github.com/yourusername/CodeBridge)
 
-A state-of-the-art transformer-based system that understands and explains code across multiple programming languages (JavaScript, Java, SQL) with **96% improved performance** over baseline models.
+A state-of-the-art transformer-based system that understands and explains code across multiple programming languages (JavaScript, Java, SQL).
 
 ## 🚀 Key Achievements
 
