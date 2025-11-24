@@ -67,7 +67,7 @@ CodeBridge/
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/CodeBridge.git
+git clone https://github.com/Ahana25/CodeBridge.git
 cd CodeBridge
 ```
 
