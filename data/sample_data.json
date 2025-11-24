@@ -1,0 +1,158 @@
+{
+  "train_samples": [
+    {
+      "language": "javascript",
+      "code": "function deleteTransaction(data) {\n    if (!data.total) {\n        return { error: 'total required' };\n    }\n    return fetch('/api/transaction', {\n        method: 'POST',\n        body: JSON.stringify(data)\n    });\n}",
+      "explanation": "Function to delete transaction by validating total field and sending POST request to API endpoint"
+    },
+    {
+      "language": "java",
+      "code": "@PostMapping(\"/api/product\")\npublic ResponseEntity<Product> updateProduct(@RequestBody Product request) {\n    if (request == null) {\n        return ResponseEntity.badRequest().build();\n    }\n    Product result = service.update(request);\n    return ResponseEntity.ok(result);\n}",
+      "explanation": "REST endpoint to update product with request validation and service delegation"
+    },
+    {
+      "language": "sql",
+      "code": "UPDATE Carts \nSET amount = @amount, updated_at = GETDATE()\nWHERE id = @id;",
+      "explanation": "SQL query to update cart records with amount and id fields"
+    },
+    {
+      "language": "sql",
+      "code": "UPDATE Orders \nSET total = @total, updated_at = GETDATE()\nWHERE id = @id;",
+      "explanation": "SQL query to update order records with total and id fields"
+    },
+    {
+      "language": "sql",
+      "code": "INSERT INTO Invoices (id, amount, created_at)\nVALUES (@id, @amount, GETDATE());",
+      "explanation": "SQL query to insert invoice records with id and amount fields"
+    },
+    {
+      "language": "sql",
+      "code": "INSERT INTO Orders (id, status, created_at)\nVALUES (@id, @status, GETDATE());",
+      "explanation": "SQL query to insert order records with id and status fields"
+    },
+    {
+      "language": "sql",
+      "code": "INSERT INTO Carts (status, total, created_at)\nVALUES (@status, @total, GETDATE());",
+      "explanation": "SQL query to insert cart records with status and total fields"
+    },
+    {
+      "language": "javascript",
+      "code": "function updateProduct(data) {\n    if (!data.email) {\n        return { error: 'email required' };\n    }\n    return fetch('/api/product', {\n        method: 'POST',\n        body: JSON.stringify(data)\n    });\n}",
+      "explanation": "Function to update product by validating email field and sending POST request to API endpoint"
+    },
+    {
+      "language": "java",
+      "code": "@PostMapping(\"/api/payment\")\npublic ResponseEntity<Payment> updatePayment(@RequestBody Payment request) {\n    if (request == null) {\n        return ResponseEntity.badRequest().build();\n    }\n    Payment result = service.update(request);\n    return ResponseEntity.ok(result);\n}",
+      "explanation": "REST endpoint to update payment with request validation and service delegation"
+    },
+    {
+      "language": "sql",
+      "code": "SELECT amount, email, created_at\nFROM Transactions\nWHERE amount IS NOT NULL\nORDER BY created_at DESC;",
+      "explanation": "SQL query to select transaction records with amount and email fields"
+    }
+  ],
+  "val_samples": [
+    {
+      "language": "javascript",
+      "code": "function validateAccount(data) {\n    if (!data.id) {\n        return { error: 'id required' };\n    }\n    return fetch('/api/account', {\n        method: 'POST',\n        body: JSON.stringify(data)\n    });\n}",
+      "explanation": "Function to validate account by validating id field and sending POST request to API endpoint"
+    },
+    {
+      "language": "java",
+      "code": "@PostMapping(\"/api/customer\")\npublic ResponseEntity<Customer> createCustomer(@RequestBody Customer request) {\n    if (request == null) {\n        return ResponseEntity.badRequest().build();\n    }\n    Customer result = service.create(request);\n    return ResponseEntity.ok(result);\n}",
+      "explanation": "REST endpoint to create customer with request validation and service delegation"
+    },
+    {
+      "language": "java",
+      "code": "@PostMapping(\"/api/cart\")\npublic ResponseEntity<Cart> validateCart(@RequestBody Cart request) {\n    if (request == null) {\n        return ResponseEntity.badRequest().build();\n    }\n    Cart result = service.validate(request);\n    return ResponseEntity.ok(result);\n}",
+      "explanation": "REST endpoint to validate cart with request validation and service delegation"
+    },
+    {
+      "language": "javascript",
+      "code": "function updateTransaction(data) {\n    if (!data.amount) {\n        return { error: 'amount required' };\n    }\n    return fetch('/api/transaction', {\n        method: 'POST',\n        body: JSON.stringify(data)\n    });\n}",
+      "explanation": "Function to update transaction by validating amount field and sending POST request to API endpoint"
+    },
+    {
+      "language": "javascript",
+      "code": "function validateInvoice(data) {\n    if (!data.name) {\n        return { error: 'name required' };\n    }\n    return fetch('/api/invoice', {\n        method: 'POST',\n        body: JSON.stringify(data)\n    });\n}",
+      "explanation": "Function to validate invoice by validating name field and sending POST request to API endpoint"
+    },
+    {
+      "language": "javascript",
+      "code": "function processAccount(data) {\n    if (!data.total) {\n        return { error: 'total required' };\n    }\n    return fetch('/api/account', {\n        method: 'POST',\n        body: JSON.stringify(data)\n    });\n}",
+      "explanation": "Function to process account by validating total field and sending POST request to API endpoint"
+    },
+    {
+      "language": "sql",
+      "code": "INSERT INTO Transactions (email, email, created_at)\nVALUES (@email, @email, GETDATE());",
+      "explanation": "SQL query to insert transaction records with email and email fields"
+    },
+    {
+      "language": "sql",
+      "code": "UPDATE Invoices \nSET total = @total, updated_at = GETDATE()\nWHERE total = @total;",
+      "explanation": "SQL query to update invoice records with total and total fields"
+    },
+    {
+      "language": "javascript",
+      "code": "function processOrder(data) {\n    if (!data.price) {\n        return { error: 'price required' };\n    }\n    return fetch('/api/order', {\n        method: 'POST',\n        body: JSON.stringify(data)\n    });\n}",
+      "explanation": "Function to process order by validating price field and sending POST request to API endpoint"
+    },
+    {
+      "language": "sql",
+      "code": "SELECT email, total, created_at\nFROM Customers\nWHERE email IS NOT NULL\nORDER BY created_at DESC;",
+      "explanation": "SQL query to select customer records with email and total fields"
+    }
+  ],
+  "test_samples": [
+    {
+      "language": "javascript",
+      "code": "function createTransaction(data) {\n    if (!data.email) {\n        return { error: 'email required' };\n    }\n    return fetch('/api/transaction', {\n        method: 'POST',\n        body: JSON.stringify(data)\n    });\n}",
+      "explanation": "Function to create transaction by validating email field and sending POST request to API endpoint"
+    },
+    {
+      "language": "sql",
+      "code": "UPDATE Carts \nSET name = @name, updated_at = GETDATE()\nWHERE amount = @amount;",
+      "explanation": "SQL query to update cart records with name and amount fields"
+    },
+    {
+      "language": "java",
+      "code": "@PostMapping(\"/api/order\")\npublic ResponseEntity<Order> updateOrder(@RequestBody Order request) {\n    if (request == null) {\n        return ResponseEntity.badRequest().build();\n    }\n    Order result = service.update(request);\n    return ResponseEntity.ok(result);\n}",
+      "explanation": "REST endpoint to update order with request validation and service delegation"
+    },
+    {
+      "language": "sql",
+      "code": "SELECT email, email, created_at\nFROM Carts\nWHERE email IS NOT NULL\nORDER BY created_at DESC;",
+      "explanation": "SQL query to select cart records with email and email fields"
+    },
+    {
+      "language": "java",
+      "code": "@PostMapping(\"/api/account\")\npublic ResponseEntity<Account> processAccount(@RequestBody Account request) {\n    if (request == null) {\n        return ResponseEntity.badRequest().build();\n    }\n    Account result = service.process(request);\n    return ResponseEntity.ok(result);\n}",
+      "explanation": "REST endpoint to process account with request validation and service delegation"
+    },
+    {
+      "language": "sql",
+      "code": "INSERT INTO Users (price, total, created_at)\nVALUES (@price, @total, GETDATE());",
+      "explanation": "SQL query to insert user records with price and total fields"
+    },
+    {
+      "language": "javascript",
+      "code": "function createInvoice(data) {\n    if (!data.id) {\n        return { error: 'id required' };\n    }\n    return fetch('/api/invoice', {\n        method: 'POST',\n        body: JSON.stringify(data)\n    });\n}",
+      "explanation": "Function to create invoice by validating id field and sending POST request to API endpoint"
+    },
+    {
+      "language": "javascript",
+      "code": "function createPayment(data) {\n    if (!data.email) {\n        return { error: 'email required' };\n    }\n    return fetch('/api/payment', {\n        method: 'POST',\n        body: JSON.stringify(data)\n    });\n}",
+      "explanation": "Function to create payment by validating email field and sending POST request to API endpoint"
+    },
+    {
+      "language": "javascript",
+      "code": "function processTransaction(data) {\n    if (!data.status) {\n        return { error: 'status required' };\n    }\n    return fetch('/api/transaction', {\n        method: 'POST',\n        body: JSON.stringify(data)\n    });\n}",
+      "explanation": "Function to process transaction by validating status field and sending POST request to API endpoint"
+    },
+    {
+      "language": "sql",
+      "code": "SELECT name, name, created_at\nFROM Invoices\nWHERE name IS NOT NULL\nORDER BY created_at DESC;",
+      "explanation": "SQL query to select invoice records with name and name fields"
+    }
+  ]
+}

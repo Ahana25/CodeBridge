@@ -1,0 +1,26 @@
+{
+  "model_type": "SimpleTransformer",
+  "training_date": "2025-11-22T23:10:55.008885",
+  "vocab_size": 4800,
+  "parameters": 23899840,
+  "dataset_size": {
+    "total": 50000,
+    "train": 40000,
+    "val": 8000,
+    "test": 2000
+  },
+  "training_config": {
+    "batch_size": 64,
+    "max_epochs": 50,
+    "actual_epochs": 11,
+    "early_stopping": 10,
+    "optimizer": "AdamW",
+    "scheduler": "CosineAnnealingLR"
+  },
+  "performance": {
+    "final_train_loss": 3.88381370010376,
+    "final_val_loss": 3.886534315109253,
+    "best_val_loss": 0.4943029897212982
+  },
+  "device": "cuda"
+}

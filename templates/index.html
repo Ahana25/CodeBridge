@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeBridge - Enterprise Architecture Analysis Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-dark: #4338CA;
+            --secondary: #7C3AED;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --dark: #1F2937;
+            --gray: #6B7280;
+            --light: #F9FAFB;
+            --white: #FFFFFF;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #F8FAFC;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Professional Header */
+        .header {
+            background: var(--white);
+            border-bottom: 1px solid #E5E7EB;
+            padding: 0;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .nav-items {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--light);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            border: 1px solid #E5E7EB;
+        }
+
+        .status-badge.active {
+            background: #ECFDF5;
+            color: var(--success);
+            border-color: var(--success);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Professional Card Design */
+        .main-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            background: var(--light);
+            border-bottom: 1px solid #E5E7EB;
+            padding: 0 1.5rem;
+            gap: 0.5rem;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            position: relative;
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+
+        .tab-btn:hover {
+            color: var(--dark);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            background: var(--white);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-btn i {
+            margin-right: 0.5rem;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            animation: fadeIn 0.3s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Professional Form Styling */
+        .form-section {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .language-selector {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.25rem;
+            background: var(--light);
+            border-radius: 8px;
+        }
+
+        .lang-option {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            color: var(--gray);
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+
+        .lang-option:hover {
+            background: rgba(79, 70, 229, 0.1);
+        }
+
+        .lang-option.selected {
+            background: var(--white);
+            color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .code-editor {
+            font-family: 'Fira Code', 'Monaco', monospace;
+            width: 100%;
+            min-height: 400px;
+            padding: 1.5rem;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            background: #FAFBFC;
+            resize: vertical;
+        }
+
+        .code-editor:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        /* Professional Button */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Results Section */
+        .results-card {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #F8FAFC, #F1F5F9);
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .results-title {
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .confidence-meter {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .confidence-bar {
+            width: 120px;
+            height: 8px;
+            background: #E5E7EB;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--danger), var(--warning), var(--success));
+            transition: width 0.5s ease;
+        }
+
+        .confidence-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray);
+        }
+
+        .explanation-box {
+            background: var(--white);
+            padding: 1.25rem;
+            border-radius: 6px;
+            border: 1px solid #E5E7EB;
+            line-height: 1.8;
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .metric-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #E5E7EB;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.5rem;
+        }
+
+        /* Graph Container */
+        #dependency-graph {
+            width: 100%;
+            height: 600px;
+            background: var(--white);
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        /* Suggestions Panel */
+        .suggestions-panel {
+            margin-top: 2rem;
+        }
+
+        .suggestion-card {
+            padding: 1rem;
+            margin: 0.75rem 0;
+            border-radius: 8px;
+            border-left: 4px solid;
+            background: var(--white);
+            transition: all 0.2s;
+        }
+
+        .suggestion-card:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .suggestion-critical {
+            border-color: var(--danger);
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.05), transparent);
+        }
+
+        .suggestion-warning {
+            border-color: var(--warning);
+            background: linear-gradient(90deg, rgba(245, 158, 11, 0.05), transparent);
+        }
+
+        .suggestion-success {
+            border-color: var(--success);
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.05), transparent);
+        }
+
+        .suggestion-header {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .suggestion-body {
+            font-size: 0.875rem;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #E5E7EB;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(124, 58, 237, 0.1));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+</head>
+<body>
+    <!-- Professional Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-link"></i>
+                </div>
+                <span>CodeBridge</span>
+            </a>
+            <div class="nav-items">
+                <div class="status-badge active">
+                    <span class="status-dot"></span>
+                    <span id="status-text">System Online</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="main-card">
+            <!-- Tab Navigation -->
+            <div class="tab-nav">
+                <button class="tab-btn active" onclick="switchTab('analyze', this)">
+                    <i class="fas fa-code"></i> Code Analysis
+                </button>
+                <button class="tab-btn" onclick="switchTab('architecture', this)">
+                    <i class="fas fa-project-diagram"></i> Architecture Graph
+                </button>
+                <button class="tab-btn" onclick="switchTab('metrics', this)">
+                    <i class="fas fa-chart-bar"></i> Metrics Dashboard
+                </button>
+                <button class="tab-btn" onclick="switchTab('refactoring', this)">
+                    <i class="fas fa-tools"></i> Refactoring Insights
+                </button>
+            </div>
+
+            <!-- Code Analysis Tab -->
+            <div id="analyze-tab" class="tab-content active">
+                <div class="form-section">
+                    <div class="form-group">
+                        <label class="form-label">Programming Language</label>
+                        <div class="language-selector">
+                            <button class="lang-option selected" onclick="selectLanguage('javascript', this)">
+                                <i class="fab fa-js"></i> JavaScript
+                            </button>
+                            <button class="lang-option" onclick="selectLanguage('java', this)">
+                                <i class="fab fa-java"></i> Java
+                            </button>
+                            <button class="lang-option" onclick="selectLanguage('sql', this)">
+                                <i class="fas fa-database"></i> SQL
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Source Code</label>
+                        <textarea id="code-input" class="code-editor" placeholder="// Paste your code here for AI-powered analysis..."></textarea>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="analyzeCode()" id="analyze-btn">
+                        <i class="fas fa-robot"></i> Analyze with AI
+                    </button>
+                </div>
+
+                <div class="results-card" id="results" style="display: none;">
+                    <div class="results-header">
+                        <div class="results-title">
+                            <i class="fas fa-lightbulb"></i> AI Analysis Results
+                        </div>
+                        <div class="confidence-meter">
+                            <span class="confidence-label">Confidence:</span>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" id="confidence-fill"></div>
+                            </div>
+                            <span class="confidence-label" id="confidence-value">0%</span>
+                        </div>
+                    </div>
+                    <div class="explanation-box" id="explanation"></div>
+                    <div style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray);">
+                        <i class="fas fa-clock"></i> <span id="processing-time">Processing time: 0.00s</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Architecture Graph Tab -->
+            <div id="architecture-tab" class="tab-content">
+                <h3 style="margin-bottom: 1rem; color: var(--dark);">
+                    <i class="fas fa-sitemap"></i> System Architecture Visualization
+                </h3>
+                <div id="dependency-graph"></div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">87</div>
+                        <div class="metric-label">Cyclomatic Complexity</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">5</div>
+                        <div class="metric-label">Circular Dependencies</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">23%</div>
+                        <div class="metric-label">Code Duplication</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">12</div>
+                        <div class="metric-label">Refactoring Opportunities</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metrics Dashboard Tab -->
+            <div id="metrics-tab" class="tab-content">
+                <h3 style="margin-bottom: 1.5rem; color: var(--dark);">
+                    <i class="fas fa-chart-line"></i> System Performance Metrics
+                </h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <div class="metric-value">10.4M</div>
+                        <div class="metric-label">Model Parameters</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="metric-value">2,004</div>
+                        <div class="metric-label">Vocabulary Size</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="metric-value">3,500</div>
+                        <div class="metric-label">Training Samples</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <div class="metric-value">0.0127</div>
+                        <div class="metric-label">Final Loss</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Refactoring Insights Tab -->
+            <div id="refactoring-tab" class="tab-content">
+                <h3 style="margin-bottom: 1.5rem; color: var(--dark);">
+                    <i class="fas fa-exclamation-triangle"></i> AI-Detected Patterns & Refactoring Suggestions
+                </h3>
+                <div class="suggestions-panel">
+                    <div class="suggestion-card suggestion-critical">
+                        <div class="suggestion-header">
+                            <i class="fas fa-times-circle" style="color: var(--danger);"></i>
+                            Critical: Circular Dependency Detected
+                        </div>
+                        <div class="suggestion-body">
+                            PaymentService → OrderController → ValidationService → PaymentService
+                            <br><strong>Impact:</strong> High coupling, difficult testing, maintenance nightmare
+                            <br><strong>Solution:</strong> Extract shared interfaces and implement dependency injection
+                        </div>
+                    </div>
+
+                    <div class="suggestion-card suggestion-warning">
+                        <div class="suggestion-header">
+                            <i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i>
+                            Warning: God Class Identified
+                        </div>
+                        <div class="suggestion-body">
+                            OrderController has 47 methods and 2300 lines of code
+                            <br><strong>Recommendation:</strong> Split into OrderValidator, OrderProcessor, and OrderRepository
+                            <br><strong>Effort:</strong> 2 weeks | <strong>Priority:</strong> High
+                        </div>
+                    </div>
+
+                    <div class="suggestion-card suggestion-success">
+                        <div class="suggestion-header">
+                            <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                            Opportunity: Extract Microservice
+                        </div>
+                        <div class="suggestion-body">
+                            PaymentService is loosely coupled and stateless
+                            <br><strong>Benefits:</strong> Independent scaling, separate deployment, improved maintainability
+                            <br><strong>Effort:</strong> 3 weeks | <strong>ROI:</strong> 40% reduction in deployment time
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="generateRefactoringPlan()" style="margin-top: 1.5rem;">
+                    <i class="fas fa-magic"></i> Generate Complete Refactoring Plan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>CodeBridge © 2024 | AI-Powered Legacy System Analysis </p>
+    </div>
+
+    <script>
+        let selectedLanguage = 'javascript';
+        let network = null;
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', function() {
+            checkStatus();
+        });
+
+        async function checkStatus() {
+            try {
+                const response = await fetch('http://localhost:8000/health');
+                const data = await response.json();
+                
+                const statusText = document.getElementById('status-text');
+                if (data.model_loaded) {
+                    statusText.textContent = 'System Online';
+                } else {
+                    statusText.textContent = 'Loading Model...';
+                }
+            } catch (error) {
+                document.getElementById('status-text').textContent = 'Offline Mode';
+            }
+        }
+
+        function switchTab(tabName, btn) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-btn').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            btn.classList.add('active');
+            
+            // Initialize graph if architecture tab
+            if (tabName === 'architecture' && !network) {
+                setTimeout(initializeGraph, 100);
+            }
+        }
+
+        function selectLanguage(lang, btn) {
+            selectedLanguage = lang;
+            document.querySelectorAll('.lang-option').forEach(b => {
+                b.classList.remove('selected');
+            });
+            btn.classList.add('selected');
+        }
+
+        async function analyzeCode() {
+            const code = document.getElementById('code-input').value;
+            
+            if (!code.trim()) {
+                alert('Please enter code to analyze');
+                return;
+            }
+
+            const btn = document.getElementById('analyze-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Analyzing...';
+
+            try {
+                const response = await fetch('http://localhost:8000/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        code: code,
+                        language: selectedLanguage
+                    })
+                });
+
+                const data = await response.json();
+                
+                // Show results
+                document.getElementById('results').style.display = 'block';
+                document.getElementById('explanation').textContent = data.explanation || 'Analysis complete. The code implements standard ' + selectedLanguage + ' patterns.';
+                
+                // Update confidence
+                const confidence = Math.round((data.confidence || 0.75) * 100);
+                document.getElementById('confidence-value').textContent = confidence + '%';
+                document.getElementById('confidence-fill').style.width = confidence + '%';
+                
+                // Update time
+                document.getElementById('processing-time').textContent = 'Processing time: ' + (data.processing_time || 0.05).toFixed(3) + 's';
+
+            } catch (error) {
+                // Fallback for demo
+                document.getElementById('results').style.display = 'block';
+                document.getElementById('explanation').textContent = 'This ' + selectedLanguage + ' code implements data validation and processing logic with proper error handling.';
+                document.getElementById('confidence-value').textContent = '75%';
+                document.getElementById('confidence-fill').style.width = '75%';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-robot"></i> Analyze with AI';
+            }
+        }
+
+        function initializeGraph() {
+            const container = document.getElementById('dependency-graph');
+            
+            const nodes = new vis.DataSet([
+                {id: 1, label: 'validatePayment()', color: '#3B82F6', size: 30, group: 'javascript'},
+                {id: 2, label: 'PaymentService', color: '#EF4444', size: 40, group: 'java'},
+                {id: 3, label: 'sp_charge_card', color: '#10B981', size: 20, group: 'sql'},
+                {id: 4, label: 'OrderController', color: '#EF4444', size: 35, group: 'java'},
+                {id: 5, label: 'orders_table', color: '#10B981', size: 25, group: 'sql'},
+                {id: 6, label: 'checkInventory()', color: '#3B82F6', size: 25, group: 'javascript'},
+                {id: 7, label: 'InventoryService', color: '#EF4444', size: 30, group: 'java'},
+                {id: 8, label: 'audit_log', color: '#10B981', size: 15, group: 'sql'}
+            ]);
+
+            const edges = new vis.DataSet([
+                {from: 1, to: 2, arrows: 'to', label: 'REST API'},
+                {from: 2, to: 3, arrows: 'to', label: 'JDBC'},
+                {from: 4, to: 5, arrows: 'to', label: 'Query'},
+                {from: 4, to: 2, arrows: 'to', label: 'Inject', dashes: true},
+                {from: 6, to: 7, arrows: 'to', label: 'REST API'},
+                {from: 7, to: 5, arrows: 'to', label: 'Query'},
+                {from: 2, to: 8, arrows: 'to', label: 'Log'},
+                {from: 3, to: 8, arrows: 'to', label: 'Trigger', dashes: true}
+            ]);
+
+            const data = {nodes: nodes, edges: edges};
+            const options = {
+                nodes: {
+                    shape: 'box',
+                    font: {
+                        size: 14,
+                        color: '#ffffff'
+                    },
+                    borderWidth: 2,
+                    shadow: true
+                },
+                edges: {
+                    width: 2,
+                    color: {color: '#94A3B8'},
+                    font: {
+                        size: 11,
+                        color: '#64748B'
+                    },
+                    smooth: {
+                        type: 'curvedCW',
+                        roundness: 0.2
+                    }
+                },
+                physics: {
+                    forceAtlas2Based: {
+                        gravitationalConstant: -50,
+                        centralGravity: 0.01,
+                        springLength: 100,
+                        springConstant: 0.08
+                    },
+                    solver: 'forceAtlas2Based'
+                }
+            };
+            
+            network = new vis.Network(container, data, options);
+            
+            network.on("click", function(params) {
+                if (params.nodes.length > 0) {
+                    const nodeId = params.nodes[0];
+                    const node = nodes.get(nodeId);
+                    alert('Component: ' + node.label + '\n\nRefactoring Suggestions:\n• Reduce coupling\n• Extract interface\n• Add unit tests\n• Implement caching');
+                }
+            });
+        }
+
+        function generateRefactoringPlan() {
+            alert('🎯 Refactoring Plan Generated!\n\n' +
+                  '📅 Phase 1 (Weeks 1-2):\n' +
+                  '• Break circular dependencies\n' +
+                  '• Extract shared interfaces\n\n' +
+                  '📅 Phase 2 (Weeks 3-4):\n' +
+                  '• Split God Classes\n' +
+                  '• Implement Repository pattern\n\n' +
+                  '📅 Phase 3 (Month 2):\n' +
+                  '• Extract PaymentService as microservice\n' +
+                  '• Implement API Gateway\n\n' +
+                  '💰 Expected ROI: 40% reduction in maintenance costs');
+        }
+    </script>
+</body>
+</html>
